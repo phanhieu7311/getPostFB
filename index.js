@@ -12,7 +12,7 @@ access_token = process.env.FB_ACCESS_TOKEN;
 cookie=process.env.COOKIE;
 agent='Chrome';
 id = '881821441833819' //id page
-idPost='3060445683971373'//'2560861030864909'//'3058776280804980'//'3067344289948179'// //id post
+idPost='3060445683971373'//'2560861030864909'//'690114134830551' //id post
   
 
 //-------------------------------------puppeteer----------------------
@@ -73,12 +73,26 @@ let getShares=async(page)=>{
 
 //get comments
 let getComments=async(page)=>{
+
   let moreComments=async()=>{
+    try{
+      if(await page.$("div[class='permalinkPost'] a[class='_4sxc _42ft']")!=null){
+        await page.waitForSelector("div[class='permalinkPost'] a[class='_4sxc _42ft']");
+        await page.click("div[class='permalinkPost'] a[class='_4sxc _42ft']");
+        await moreComments();
+      }
+    }catch(err){
+      if(await page.$("div[class='permalinkPost'] a[class='_4sxc _42ft']")!=null){
+        await page.waitForSelector("div[class='permalinkPost'] a[class='_4sxc _42ft']");
+        await page.click("div[class='permalinkPost'] a[class='_4sxc _42ft']");
+        await moreComments();
+      }
+    }
     if(await page.$("div[class='permalinkPost'] a[class='_4sxc _42ft']")!=null){
-      await page.click("div[class='permalinkPost'] a[class='_4sxc _42ft']");
-      return moreComments();
+      await moreComments()
     }
   }
+  
   await moreComments();
 
   let data=await page.evaluate(()=>{
@@ -158,8 +172,8 @@ let getImages=async(page)=>{
   let images=[];
   let imagesCount=await page.evaluate(()=>{
     let imgCount;
-    if(document.querySelector("div[class='_52db']")!=null){
-      imgCount=3+parseInt(document.querySelector("div[class='_52db']").innerText);
+    if(document.querySelector("div[class='permalinkPost'] div[class='_52db']")!=null){
+      imgCount=3+parseInt(document.querySelector("div[class='permalinkPost'] div[class='_52db']").innerText);
     }
     else if(document.querySelector("div[class='permalinkPost'] div[class='_2a2q _65sr']")==null){
       imgCount=1;
@@ -181,7 +195,7 @@ let getImages=async(page)=>{
         await page.click("snowliftPager next hilightPager']");
       }
     }
-    await page.waitFor( 100 );
+    await page.waitFor( 200 );
     let image=await page.evaluate(async()=>{
       let img=await document.querySelector("img[class='spotlight']").attributes["src"].value;
       return img;
@@ -201,7 +215,6 @@ let pupp= async(cookie,idPost)=>{
   await page.waitFor( 1000 );
   await page.goto(url);
 
-  
   if(await page.$("div[class='_n3'] a")!=null){
     await page.click("div[class='_n3'] a");
   }
