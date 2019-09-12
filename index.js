@@ -12,7 +12,7 @@ access_token = process.env.FB_ACCESS_TOKEN;
 cookie=process.env.COOKIE;
 agent='Chrome';
 id = '881821441833819' //id page
-idPost='3060445683971373'//'2560861030864909'//'690114134830551' //id post
+idPost='3060445683971373'//'3071413992874542'//'690114134830551'//'2560861030864909' //id post
   
 
 //-------------------------------------puppeteer----------------------
@@ -186,21 +186,22 @@ let getImages=async(page)=>{
   if(await page.$("div[class='mtm'] a")!=null){
     await page.click("div[class='mtm'] a");
   }
-  await page.waitFor( 1000 );
+  await page.waitFor( 3000 );
   
   for(i=1;i<=imagesCount;i++){
-    if(imagesCount!=1){
-      await page.keyboard.press('ArrowRight');
-      if(await page.$("snowliftPager next hilightPager")!=null){
-        await page.click("snowliftPager next hilightPager']");
-      }
-    }
     await page.waitFor( 200 );
     let image=await page.evaluate(async()=>{
       let img=await document.querySelector("img[class='spotlight']").attributes["src"].value;
       return img;
     })
     images.push(image);
+    if(imagesCount!=1){
+      await page.keyboard.press('ArrowRight');
+      if(await page.$("snowliftPager next hilightPager")!=null){
+        await page.click("snowliftPager next hilightPager']");
+      }
+    }
+    
   }
   return images;
 }
