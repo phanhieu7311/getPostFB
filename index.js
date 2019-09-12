@@ -73,7 +73,7 @@ let getShares=async(page)=>{
 
 //get comments
 let getComments=async(page)=>{
-
+  //Click more comments and reply
   let moreComments=async()=>{
     try{
       if(await page.$("div[class='permalinkPost'] a[class='_4sxc _42ft']")!=null){
@@ -92,9 +92,8 @@ let getComments=async(page)=>{
       await moreComments()
     }
   }
-  
   await moreComments();
-
+  //Get comments and reply
   let data=await page.evaluate(()=>{
     let comment=[];
     let i=1;
@@ -170,6 +169,7 @@ let getComments=async(page)=>{
 //get images
 let getImages=async(page)=>{
   let images=[];
+  //Images count
   let imagesCount=await page.evaluate(()=>{
     let imgCount;
     if(document.querySelector("div[class='permalinkPost'] div[class='_52db']")!=null){
@@ -183,11 +183,12 @@ let getImages=async(page)=>{
     }
     return imgCount;
   })
+  //Click image
   if(await page.$("div[class='mtm'] a")!=null){
     await page.click("div[class='mtm'] a");
   }
   await page.waitFor( 3000 );
-  
+  //Get image src
   for(i=1;i<=imagesCount;i++){
     await page.waitFor( 200 );
     let image=await page.evaluate(async()=>{
@@ -216,6 +217,7 @@ let pupp= async(cookie,idPost)=>{
   await page.waitFor( 1000 );
   await page.goto(url);
 
+  //Close popup image
   if(await page.$("div[class='_n3'] a")!=null){
     await page.click("div[class='_n3'] a");
   }
