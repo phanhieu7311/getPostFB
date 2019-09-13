@@ -410,7 +410,7 @@ let getPost= async({author,postTime,content,likes,shares,comment,images},cookie,
   if(images==true){
     images=await getImages(page);
   }
-  return {
+  let post= {
     author,
     postTime,
     content,
@@ -419,10 +419,11 @@ let getPost= async({author,postTime,content,likes,shares,comment,images},cookie,
     comment,
     images
   };
+  return removeUndefined(post);
 }
 
 let crawl=async({author,postTime,content,likes,shares,comment,images},cookie,idPost)=>{
   let data=await getPost({author,postTime,content,likes,shares,comment,images},cookie,idPost);
-  console.log(removeUndefined(data))
+  console.log(data);
 }
-crawl({author:true,content:true},cookie,idPost);
+crawl({author:true,content:true,comment:true},cookie,idPost);
