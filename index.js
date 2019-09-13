@@ -135,13 +135,16 @@ let getComments=async(page)=>{
           await page.click("div[class='permalinkPost'] a[class='_4sxc _42ft']");
           await moreComments();
         }
-      }catch(err){
+      }
+      //if err run again
+      catch(err){
         if(await page.$("div[class='permalinkPost'] a[class='_4sxc _42ft']")!=null){
           await page.waitForSelector("div[class='permalinkPost'] a[class='_4sxc _42ft']");
           await page.click("div[class='permalinkPost'] a[class='_4sxc _42ft']");
           await moreComments();
         }
       }
+      //if more cmt or reply is still exist
       if(await page.$("div[class='permalinkPost'] a[class='_4sxc _42ft']")!=null){
         await moreComments()
       }
@@ -389,26 +392,53 @@ let getPost= async({author,postTime,content,likes,shares,comment,images},cookie,
   if(await page.$("div[class='_n3'] a")!=null){
     await page.click("div[class='_n3'] a");
   }
-  if(author==true){
-    author=await getAuthor(page);
+
+  try{
+    if(author==true){
+      author=await getAuthor(page);
+    }
+    if(postTime==true){
+      postTime=await getPostTime(page);
+    }
+    if(content==true){
+      content=await getPostContent(page);
+    }
+    if(likes==true){
+      likes=await getLikes(page);
+    }
+    if(shares==true){
+      shares=await getShares(page);
+    }
+    if(comment==true){
+      comment=await getComments(page);
+    }
+    if(images==true){
+      images=await getImages(page);
+    }
   }
-  if(postTime==true){
-    postTime=await getPostTime(page);
-  }
-  if(content==true){
-    content=await getPostContent(page);
-  }
-  if(likes==true){
-    likes=await getLikes(page);
-  }
-  if(shares==true){
-    shares=await getShares(page);
-  }
-  if(comment==true){
-    comment=await getComments(page);
-  }
-  if(images==true){
-    images=await getImages(page);
+  //if err start again
+  catch(err){
+    if(author==true){
+      author=await getAuthor(page);
+    }
+    if(postTime==true){
+      postTime=await getPostTime(page);
+    }
+    if(content==true){
+      content=await getPostContent(page);
+    }
+    if(likes==true){
+      likes=await getLikes(page);
+    }
+    if(shares==true){
+      shares=await getShares(page);
+    }
+    if(comment==true){
+      comment=await getComments(page);
+    }
+    if(images==true){
+      images=await getImages(page);
+    }
   }
   let post= {
     author,
